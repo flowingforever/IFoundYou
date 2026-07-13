@@ -1,0 +1,6 @@
+cooldown: 75 # seconds
+aura-radius: 5.0
+aura-darkness: 2 # seconds
+glow: 3 # seconds
+darkness: 5 # seconds
+speed: 10 # seconds

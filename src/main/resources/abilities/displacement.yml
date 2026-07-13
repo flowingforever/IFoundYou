@@ -1,0 +1,7 @@
+cooldown: 40
+speed:
+  amplifier: 2
+  duration: 3 # seconds
+weakness:
+  amplifier: 3
+  duration: 4 # seconds

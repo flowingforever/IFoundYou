@@ -77,22 +77,13 @@ public class AdrenalineAbility extends Ability {
         }
 
         var conditionManager = Jarona.getInstance().getConditionManager();
-        var player = event.getPlayer();
         int maxUses = getDefaultAbilityProperty("uses", 2);
-        var condition = conditionManager.getPlayerConditions(player)
-                .getOrCreate(
-                        getId() + "_ability",
-                        new TimedUseCondition(
-                                TimedCondition.Type.GAME_TICK,
-                                c -> null,
-                                player.getUniqueId(),
-                                maxUses
-                        )
-                );
-
-        condition.setHud(c -> "<yellow>⚡ <green>Ready!</green></yellow> " + buildUses(maxUses, 0));
-        condition.setHudCondition(c -> true);
-        condition.setPriority(200);
+        initializeAbilityUsesCondition(
+                event,
+                maxUses,
+                conditionManager,
+                c -> "<yellow>⚡ <green>Ready!</green></yellow> " + buildUses(maxUses, 0)
+        );
     }
 
     @EventHandler

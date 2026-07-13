@@ -1,0 +1,8 @@
+cooldown: 0.2 # seconds
+minimum-movement: 0.2 # blocks
+view-range: 24.0
+particle:
+  red: 220
+  green: 220
+  blue: 220
+  size: 1.0

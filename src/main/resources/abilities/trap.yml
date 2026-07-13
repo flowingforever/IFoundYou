@@ -1,0 +1,9 @@
+cooldown: 60
+lifetime: 130 # seconds
+radius: 3.25
+particle:
+  color:
+    red: 255
+    green: 140
+    blue: 0
+  size: 1.2

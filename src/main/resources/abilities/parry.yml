@@ -1,0 +1,9 @@
+cooldown: 35
+active-window: 3 # seconds
+uses: 2
+sound:
+  window: "minecraft:entity.villager.work_toolsmith"
+  hit:
+    defender: "minecraft:block.anvil.land"
+    attacker: "minecraft:block.amethyst_block.break"
+  miss: "minecraft:entity.player.big_fall"

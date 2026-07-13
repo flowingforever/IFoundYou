@@ -5,9 +5,17 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import pro.fazeclan.river.ifoundyou.IFoundYou;
+import pro.fazeclan.river.ifoundyou.event.FoundGameAddPlayer;
+import pro.fazeclan.river.ifoundyou.role.Faction;
 import pro.fazeclan.river.ifoundyou.util.RoleUtil;
+import pro.fazeclan.river.jarona.Jarona;
+import pro.fazeclan.river.jarona.condition.Condition;
+import pro.fazeclan.river.jarona.condition.ConditionManager;
+import pro.fazeclan.river.jarona.condition.TimedCondition;
+import pro.fazeclan.river.jarona.condition.TimedUseCondition;
 
 import java.io.File;
+import java.util.function.Function;
 
 @SuppressWarnings("unchecked")
 public class Ability implements Listener {
@@ -49,4 +57,48 @@ public class Ability implements Listener {
         return sb.toString().trim();
     }
 
+    public void initializeAbilityCondition(FoundGameAddPlayer event, ConditionManager manager, Function<Condition, String> hud) {
+        var player = event.getPlayer();
+        var condition = manager.getPlayerConditions(player)
+                .getOrCreate(
+                        getId() + "_ability",
+                        new TimedCondition(
+                                TimedCondition.Type.GAME_TICK,
+                                c -> null,
+                                player.getUniqueId()
+                        )
+                );
+
+        condition.setHud(hud);
+        condition.setHudCondition(c -> true);
+        condition.setPriority(200);
+    }
+
+    public void initializeAbilityUsesCondition(FoundGameAddPlayer event, int maxUses, ConditionManager manager, Function<Condition, String> hud) {
+        var player = event.getPlayer();
+        var condition = manager.getPlayerConditions(player)
+                .getOrCreate(
+                        getId() + "_ability",
+                        new TimedUseCondition(
+                                TimedCondition.Type.GAME_TICK,
+                                c -> null,
+                                player.getUniqueId(),
+                                maxUses
+                        )
+                );
+
+        condition.setHud(hud);
+        condition.setHudCondition(c -> true);
+        condition.setPriority(200);
+    }
+
+    public boolean isRunner(Player player) {
+        var role = RoleUtil.getRole(player);
+        return role.filter(value -> value.getFaction() == Faction.RUNNERS).isPresent();
+    }
+
+    public boolean isHunter(Player player) {
+        var role = RoleUtil.getRole(player);
+        return role.filter(value -> value.getFaction() == Faction.HUNTERS).isPresent();
+    }
 }

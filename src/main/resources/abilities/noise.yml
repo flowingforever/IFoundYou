@@ -1,0 +1,4 @@
+cooldown: 45 # seconds
+period: 10 # seconds, between each ring
+blindness-duration: 5
+speed-regen-duration: 8
