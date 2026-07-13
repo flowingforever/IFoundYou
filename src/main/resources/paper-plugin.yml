@@ -1,0 +1,20 @@
+name: IFoundYou
+version: '${version}'
+
+main: pro.fazeclan.river.ifoundyou.IFoundYou
+bootstrapper: pro.fazeclan.river.ifoundyou.IFoundYouBootstrap
+loader: pro.fazeclan.river.ifoundyou.IFoundYouLoader
+api-version: '26.2'
+load: STARTUP
+
+authors: [ riversflowing ]
+
+dependencies:
+  server:
+    Jarona:
+      load: AFTER
+      required: true
+    NBTAPI:
+      load: AFTER
+      required: true
+      join-classpath: true
