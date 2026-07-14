@@ -212,6 +212,10 @@ public class FoundYouGame extends Game {
                 getCurrentGameTick(world) + 1
         );
 
+        if (!areRunnersAlive(players) || !areHuntersAlive(players)) {
+            GameUtil.endGame(world);
+        }
+
         if (getCurrentGameTick(world) == 100) {
             var config = YamlConfiguration.loadConfiguration(new File(world.getWorldFolder(), "map_config.yml"));
 
@@ -247,12 +251,6 @@ public class FoundYouGame extends Game {
         }
 
         if (getCurrentGameTick(world) >= (graceLength + gameLength)) {
-            world.sendMessage(Component.text("ok it's done"));
-            GameUtil.endGame(world);
-        }
-
-        if ((areHuntersAlive(players) && !areRunnersAlive(players))
-        || (!areHuntersAlive(players) && areRunnersAlive(players))) {
             GameUtil.endGame(world);
         }
 
@@ -295,7 +293,9 @@ public class FoundYouGame extends Game {
     }
 
     public boolean isFactionAlive(List<Player> players, Faction faction) {
-        return players.stream().anyMatch(player -> RoleUtil.getFactionElseThrow(player).equals(faction));
+        return players.stream()
+                .filter(player -> !player.getGameMode().isInvulnerable())
+                .anyMatch(player -> RoleUtil.getFactionElseThrow(player).equals(faction));
     }
 
     public boolean areRunnersAlive(List<Player> players) {
