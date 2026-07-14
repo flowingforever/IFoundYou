@@ -71,7 +71,7 @@ public class NoisemakerAbility extends Ability {
         for (Player victim : player.getWorld().getPlayers()) {
             if (victim == player) continue;
             if (victim.getGameMode().isInvulnerable()) continue;
-            if (RoleUtil.getFaction(player) == RoleUtil.getFaction(victim)) continue;
+            if (RoleUtil.getFactionElseThrow(player) == RoleUtil.getFactionElseThrow(victim)) continue;
             if (victim.getLocation().distanceSquared(loc) > radius * radius) continue;
 
             victim.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, getDefaultAbilityProperty("blindness-duration", 5) * 20, 0, false, false, true));

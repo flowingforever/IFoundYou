@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 import pro.fazeclan.river.ifoundyou.ability.AbilityManager;
 import pro.fazeclan.river.ifoundyou.game.FoundYouGame;
+import pro.fazeclan.river.ifoundyou.listener.AbilityListeners;
 import pro.fazeclan.river.ifoundyou.listener.GameListeners;
 import pro.fazeclan.river.ifoundyou.role.RoleManager;
 import pro.fazeclan.river.jarona.Jarona;
@@ -26,10 +27,7 @@ public final class IFoundYou extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (!NBT.preloadApi()) {
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        NBT.preloadApi();
 
         var manager = Jarona.getInstance().getGameManager();
         manager.register(new FoundYouGame());
@@ -40,6 +38,7 @@ public final class IFoundYou extends JavaPlugin {
         this.abilityManager.registerAbilities();
 
         getServer().getPluginManager().registerEvents(new GameListeners(), this);
+        getServer().getPluginManager().registerEvents(new AbilityListeners(), this);
     }
 
     @Override

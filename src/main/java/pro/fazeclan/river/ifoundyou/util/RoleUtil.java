@@ -20,7 +20,7 @@ public class RoleUtil {
 
     public static void assignRole(Player player, Role role) {
         player.getScoreboardTags().add("ifoundyou_" + role.getId());
-        player.getScoreboardTags().add("ifoundyou_" + role.getFaction().toString().toLowerCase());
+        player.getScoreboardTags().add("ifoundyoufaction_" + role.getFaction().toString().toLowerCase());
         GameUtil.resetPlayer(player, GameMode.ADVENTURE);
         player.addPotionEffect(
                 new PotionEffect(
@@ -29,9 +29,9 @@ public class RoleUtil {
                         0, true, false, true
                 )
         );
-        NBT.modify(player, nbt -> {
-            nbt.mergeCompound(NBT.parseNBT(role.getItems()));
-        });
+//        NBT.modify(player, nbt -> {
+//            nbt.mergeCompound(NBT.parseNBT(role.getItems()));
+//        });
         IFoundYou.getInstance()
                 .getServer()
                 .getPluginManager()
@@ -47,6 +47,7 @@ public class RoleUtil {
         var role = getRole(player);
         if (role.isPresent()) {
             player.getScoreboardTags().removeIf(tag -> tag.startsWith("ifoundyou_"));
+            removeFaction(player);
             IFoundYou.getInstance()
                     .getServer()
                     .getPluginManager()
@@ -63,12 +64,7 @@ public class RoleUtil {
     }
 
     public static Role getRoleOrThrow(Player player) {
-        var manager = IFoundYou.getInstance().getRoleManager();
-        return player.getScoreboardTags()
-                .stream()
-                .filter(tag -> tag.startsWith("ifoundyou_"))
-                .map(tag -> manager.getRole(tag.substring(11)))
-                .findFirst().get();
+        return getRole(player).get();
     }
 
     public static Optional<Role> getRole(Player player) {
@@ -76,12 +72,24 @@ public class RoleUtil {
         return player.getScoreboardTags()
                 .stream()
                 .filter(tag -> tag.startsWith("ifoundyou_"))
-                .map(tag -> manager.getRole(tag.substring(11)))
+                .map(tag -> manager.getRole(tag.replace("ifoundyou_", "")))
                 .findFirst();
     }
 
-    public static Faction getFaction(Player player) {
-        return getRoleOrThrow(player).getFaction();
+    public static Optional<Faction> getFaction(Player player) {
+        return player.getScoreboardTags()
+                .stream()
+                .filter(tag -> tag.startsWith("ifoundyoufaction_"))
+                .map(tag -> Faction.valueOf(tag.replace("ifoundyoufaction_", "").toUpperCase()))
+                .findFirst();
+    }
+
+    public static Faction getFactionElseThrow(Player player) {
+        return getFaction(player).get();
+    }
+
+    public static void removeFaction(Player player) {
+        player.getScoreboardTags().removeIf(tag -> tag.startsWith("ifoundyoufaction_"));
     }
 
 }

@@ -41,7 +41,6 @@ public class FoundYouGame extends Game {
         var plugin = IFoundYou.getInstance();
         var jarona = Jarona.getInstance();
 
-        var queueManager = jarona.getQueueManager();
         var roleManager = plugin.getRoleManager();
         var conditionManager = jarona.getConditionManager();
         var nametagManager = jarona.getNametagManager();
@@ -61,7 +60,7 @@ public class FoundYouGame extends Game {
 
         var hunterCount = pluginConfig.getInt("hunter-count", 1);
 
-        var queued = new ArrayList<>(queueManager.getPlayersQueued(this));
+        var queued = new ArrayList<>(players);
         Collections.shuffle(queued);
 
         for (int i = 0; i < hunterCount; i++) {
@@ -154,13 +153,13 @@ public class FoundYouGame extends Game {
         }
         world.getPersistentDataContainer().set(
                 IFoundYou.getKey("grace_length"),
-                PersistentDataType.LONG,
-                (long) graceLength
+                PersistentDataType.INTEGER,
+                graceLength
         );
         world.getPersistentDataContainer().set(
                 IFoundYou.getKey("game_length"),
-                PersistentDataType.LONG,
-                (long) gameLength
+                PersistentDataType.INTEGER,
+                gameLength
         );
 
         var gameUUID = UUID.fromString(world.getKey().getKey());
@@ -204,8 +203,8 @@ public class FoundYouGame extends Game {
         var worldPDC = world.getPersistentDataContainer();
         var minimessage = MiniMessage.miniMessage();
 
-        var graceLength = worldPDC.get(IFoundYou.getKey("grace_length"), PersistentDataType.LONG);
-        var gameLength = worldPDC.get(IFoundYou.getKey("game_length"), PersistentDataType.LONG);
+        var graceLength = worldPDC.get(IFoundYou.getKey("grace_length"), PersistentDataType.INTEGER);
+        var gameLength = worldPDC.get(IFoundYou.getKey("game_length"), PersistentDataType.INTEGER);
 
         worldPDC.set(
                 IFoundYou.getKey("tick"),
@@ -234,7 +233,7 @@ public class FoundYouGame extends Game {
                         "<yellow>Hunters have entered the map, good luck!</yellow>"
                 ));
 
-                if (RoleUtil.getFaction(player) == Faction.HUNTERS) {
+                if (RoleUtil.getFactionElseThrow(player) == Faction.HUNTERS) {
                     player.teleport(WorldlessLocation.deserialize("spawn", config).toLocation(world));
                     player.addPotionEffect(
                             new PotionEffect(
@@ -248,6 +247,7 @@ public class FoundYouGame extends Game {
         }
 
         if (getCurrentGameTick(world) >= (graceLength + gameLength)) {
+            world.sendMessage(Component.text("ok it's done"));
             GameUtil.endGame(world);
         }
 
@@ -295,7 +295,7 @@ public class FoundYouGame extends Game {
     }
 
     public boolean isFactionAlive(List<Player> players, Faction faction) {
-        return players.stream().anyMatch(player -> RoleUtil.getFaction(player) == faction);
+        return players.stream().anyMatch(player -> RoleUtil.getFactionElseThrow(player).equals(faction));
     }
 
     public boolean areRunnersAlive(List<Player> players) {

@@ -69,6 +69,7 @@ public class Ability implements Listener {
                         )
                 );
 
+        condition.setDuration(0);
         condition.setHud(hud);
         condition.setHudCondition(c -> true);
         condition.setPriority(200);
@@ -87,6 +88,8 @@ public class Ability implements Listener {
                         )
                 );
 
+        condition.setDuration(0);
+        condition.setUses(0);
         condition.setHud(hud);
         condition.setHudCondition(c -> true);
         condition.setPriority(200);
