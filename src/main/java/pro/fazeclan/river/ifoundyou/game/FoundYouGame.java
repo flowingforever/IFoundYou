@@ -1,8 +1,11 @@
 package pro.fazeclan.river.ifoundyou.game;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
+import org.alexdev.unlimitednametags.api.UNTPaperAPI;
+import org.alexdev.unlimitednametags.config.Settings;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -17,8 +20,8 @@ import pro.fazeclan.river.ifoundyou.util.TimeUtil;
 import pro.fazeclan.river.jarona.Jarona;
 import pro.fazeclan.river.jarona.condition.TimedCondition;
 import pro.fazeclan.river.jarona.game.Game;
-import pro.fazeclan.river.jarona.nametag.OverridenNametag;
 import pro.fazeclan.river.jarona.util.GameUtil;
+import pro.fazeclan.river.jarona.util.NametagUtil;
 import pro.fazeclan.river.jarona.util.WorldlessLocation;
 
 import java.io.File;
@@ -43,7 +46,7 @@ public class FoundYouGame extends Game {
 
         var roleManager = plugin.getRoleManager();
         var conditionManager = jarona.getConditionManager();
-        var nametagManager = jarona.getNametagManager();
+        var nametagManager = UNTPaperAPI.getInstance();
 
         var pluginConfig = IFoundYou.getInstance().getConfig();
         var config = YamlConfiguration.loadConfiguration(new File(world.getWorldFolder(), "map_config.yml"));
@@ -122,16 +125,38 @@ public class FoundYouGame extends Game {
                             miniMessage.deserialize("<yellow>You're a <green>Runner!"),
                             miniMessage.deserialize("<green>Avoid being killed by hunters to win!")
                     );
-                    nametagManager.createOverride(player, (viewer, target) -> "<green>" + target.getName() + "</green>");
+                    nametagManager.modifyNametagProperty(player, current -> {
+                        var groups = new ArrayList<>(current.displayGroups());
+                        groups.clear();
+                        groups.add(Settings.DisplayGroup
+                                .builder()
+                                .line("<green>" + player.getName() + "</green>")
+                                .scale(1f)
+                                .build()
+                        );
+                        return current.withDisplayGroups(groups);
+                    });
+                    nametagManager.setNametagSeeThrough(player, false);
+                    NametagUtil.hidePlayerNametagWithGlowToAll(player, NamedTextColor.GREEN);
                 }
                 case HUNTERS -> {
                     title = Title.title(
                             miniMessage.deserialize("<yellow>You're a <red>Hunter!"),
                             miniMessage.deserialize("<red>Catch and kill all runners to win.")
                     );
-                    nametagManager.createOverride(player, (viewer, target) -> "<red>" + target.getName() + "</red>");
-                    var nametag = (OverridenNametag) nametagManager.get(player);
-                    nametag.getDisplay().setSeeThrough(true);
+                    nametagManager.modifyNametagProperty(player, current -> {
+                        var groups = new ArrayList<>(current.displayGroups());
+                        groups.clear();
+                        groups.add(Settings.DisplayGroup
+                                .builder()
+                                .line("<red>" + player.getName() + "</red>")
+                                .scale(1f)
+                                .build()
+                        );
+                        return current.withDisplayGroups(groups);
+                    });
+                    nametagManager.setNametagSeeThrough(player, true);
+                    NametagUtil.hidePlayerNametagWithGlowToAll(player, NamedTextColor.RED);
                 }
             }
             player.showTitle(title);
@@ -256,12 +281,13 @@ public class FoundYouGame extends Game {
 
         boolean runnersWon = areRunnersAlive(players);
 
-        var nametagManager = jarona.getNametagManager();
+        var nametagManager = UNTPaperAPI.getInstance();
         var conditionManager = jarona.getConditionManager();
         conditionManager.getGameConditions(gameUUID).remove("game_" + gameUUID);
 
         for (Player player : players) {
-            nametagManager.remove(player);
+            nametagManager.removeNametagOverride(player);
+            NametagUtil.showPlayerNametagToAll(player);
             RoleUtil.removeRoles(player);
 
             if (runnersWon) {

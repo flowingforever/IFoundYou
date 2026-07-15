@@ -12,9 +12,9 @@ authors: [ riversflowing ]
 dependencies:
   server:
     Jarona:
-      load: AFTER
+      load: BEFORE
       required: true
     NBTAPI:
-      load: AFTER
+      load: BEFORE
       required: true
       join-classpath: true
