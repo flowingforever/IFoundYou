@@ -122,26 +122,14 @@ public class FoundYouGame extends Game {
                             miniMessage.deserialize("<yellow>You're a <green>Runner!"),
                             miniMessage.deserialize("<green>Avoid being killed by hunters to win!")
                     );
-                    nametagManager.createOverride(player, (viewer, target) -> {
-                        if (viewer.getWorld().equals(target.getWorld())) {
-                            return "<green>" + target.getName() + "</green>";
-                        } else {
-                            return "";
-                        }
-                    });
+                    nametagManager.createOverride(player, (viewer, target) -> "<green>" + target.getName() + "</green>");
                 }
                 case HUNTERS -> {
                     title = Title.title(
                             miniMessage.deserialize("<yellow>You're a <red>Hunter!"),
                             miniMessage.deserialize("<red>Catch and kill all runners to win.")
                     );
-                    nametagManager.createOverride(player, (viewer, target) -> {
-                        if (viewer.getWorld().equals(target.getWorld())) {
-                            return "<red>" + target.getName() + "</red>";
-                        } else {
-                            return "";
-                        }
-                    });
+                    nametagManager.createOverride(player, (viewer, target) -> "<red>" + target.getName() + "</red>");
                     var nametag = (OverridenNametag) nametagManager.get(player);
                     nametag.getDisplay().setSeeThrough(true);
                 }
@@ -268,10 +256,12 @@ public class FoundYouGame extends Game {
 
         boolean runnersWon = areRunnersAlive(players);
 
+        var nametagManager = jarona.getNametagManager();
         var conditionManager = jarona.getConditionManager();
         conditionManager.getGameConditions(gameUUID).remove("game_" + gameUUID);
 
         for (Player player : players) {
+            nametagManager.remove(player);
             RoleUtil.removeRoles(player);
 
             if (runnersWon) {
