@@ -26,7 +26,6 @@ public class AdrenalineAbility extends Ability {
 
         var maxUses = getDefaultAbilityProperty("uses", 2);
 
-        player.sendMessage("ok tried adrenaline cooldown");
         var condition = conditionManager.getPlayerConditions(player)
                 .getOrCreate(
                         getId() + "_ability",
