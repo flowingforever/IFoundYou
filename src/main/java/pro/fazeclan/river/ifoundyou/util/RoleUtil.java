@@ -1,7 +1,6 @@
 package pro.fazeclan.river.ifoundyou.util;
 
 import de.tr7zw.nbtapi.NBT;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -29,9 +28,11 @@ public class RoleUtil {
                         0, true, false, true
                 )
         );
-//        NBT.modify(player, nbt -> {
-//            nbt.mergeCompound(NBT.parseNBT(role.getItems()));
-//        });
+        NBT.modify(player, nbt -> {
+            try {
+                nbt.mergeCompound(NBT.parseNBT(role.getItems()));
+            } catch (Exception ignored) {}
+        });
         IFoundYou.getInstance()
                 .getServer()
                 .getPluginManager()

@@ -72,10 +72,12 @@ public class FoundYouGame extends Game {
         var limitedHunterRoles = new ArrayList<>(roleManager.getLimitedRoles(Faction.HUNTERS));
         Collections.shuffle(limitedHunterRoles);
         for (Role role : limitedHunterRoles) {
-            for (int i = 0; i < role.getMaxPlayers(); i++) {
-                var hunter = hunters.get(i);
-                RoleUtil.assignRole(hunter, role, hunterSpawn);
-                hunters.remove(hunter);
+            for (int i = 0; i < role.getMaxPlayers() || i < hunters.size(); i++) {
+                try {
+                    var hunter = hunters.get(i);
+                    RoleUtil.assignRole(hunter, role, hunterSpawn);
+                    hunters.remove(hunter);
+                } catch (Exception ignored) {}
             }
         }
         if (!hunters.isEmpty()) {
@@ -93,9 +95,11 @@ public class FoundYouGame extends Game {
         Collections.shuffle(limitedRunnerRoles);
         for (Role role : limitedRunnerRoles) {
             for (int i = 0; i < role.getMaxPlayers(); i++) {
-                var runner = queued.get(i);
-                RoleUtil.assignRole(runner, role, runnerSpawn);
-                queued.remove(runner);
+                try {
+                    var runner = queued.get(i);
+                    RoleUtil.assignRole(runner, role, runnerSpawn);
+                    queued.remove(runner);
+                } catch (Exception ignored) {}
             }
         }
         if (!queued.isEmpty()) {

@@ -13,7 +13,6 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import pro.fazeclan.river.ifoundyou.util.RoleUtil;
 import pro.fazeclan.river.jarona.util.GameUtil;
 

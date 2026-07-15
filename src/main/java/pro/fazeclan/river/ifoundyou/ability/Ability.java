@@ -8,7 +8,6 @@ import pro.fazeclan.river.ifoundyou.IFoundYou;
 import pro.fazeclan.river.ifoundyou.event.FoundGameAddPlayer;
 import pro.fazeclan.river.ifoundyou.role.Faction;
 import pro.fazeclan.river.ifoundyou.util.RoleUtil;
-import pro.fazeclan.river.jarona.Jarona;
 import pro.fazeclan.river.jarona.condition.Condition;
 import pro.fazeclan.river.jarona.condition.ConditionManager;
 import pro.fazeclan.river.jarona.condition.TimedCondition;
@@ -69,7 +68,7 @@ public class Ability implements Listener {
                         )
                 );
 
-        condition.setDuration(0);
+        condition.reset();
         condition.setHud(hud);
         condition.setHudCondition(c -> true);
         condition.setPriority(200);
@@ -82,17 +81,17 @@ public class Ability implements Listener {
                         getId() + "_ability",
                         new TimedUseCondition(
                                 TimedCondition.Type.GAME_TICK,
-                                c -> null,
+                                _ -> null,
                                 player.getUniqueId(),
                                 maxUses
                         )
                 );
 
-        condition.setDuration(0);
-        condition.setUses(0);
+        condition.reset();
         condition.setHud(hud);
-        condition.setHudCondition(c -> true);
+        condition.setHudCondition(_ -> true);
         condition.setPriority(200);
+        player.sendMessage("this ability is available: " + condition.getAvailable());
     }
 
     public boolean isRunner(Player player) {

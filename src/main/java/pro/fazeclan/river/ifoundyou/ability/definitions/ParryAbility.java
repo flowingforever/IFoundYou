@@ -1,6 +1,5 @@
 package pro.fazeclan.river.ifoundyou.ability.definitions;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -9,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 import pro.fazeclan.river.ifoundyou.ability.Ability;
 import pro.fazeclan.river.ifoundyou.event.AbilityEvent;
 import pro.fazeclan.river.ifoundyou.event.FoundGameAddPlayer;

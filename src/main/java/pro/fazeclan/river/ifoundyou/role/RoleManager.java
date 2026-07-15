@@ -144,7 +144,7 @@ public class RoleManager {
         config.set("inventory", role.getItems());
         config.set("faction", role.getFaction().name().toLowerCase());
         config.set("max-players", role.getMaxPlayers());
-        config.set("abilities", role.getAbilities());
+        config.set("abilities", role.getAbilities().stream().toList());
         config.set("description", role.getDescription());
 
         try {
