@@ -3,6 +3,7 @@ package pro.fazeclan.river.ifoundyou.listener;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,7 +15,12 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import pro.fazeclan.river.ifoundyou.util.RoleUtil;
+import pro.fazeclan.river.jarona.Jarona;
+import pro.fazeclan.river.jarona.condition.TimedCondition;
 import pro.fazeclan.river.jarona.util.GameUtil;
+
+import java.io.File;
+import java.util.UUID;
 
 public class GameListeners implements Listener {
 
@@ -116,8 +122,12 @@ public class GameListeners implements Listener {
         if (event.getFinalDamage() < player.getHealth()) {
             return;
         }
+        var world = player.getWorld();
+        var config = YamlConfiguration.loadConfiguration(new File(world.getWorldFolder(), "map_config.yml"));
+        var manager = Jarona.getInstance().getConditionManager();
+        var gameUUID = UUID.fromString(world.getKey().getKey());
         player.setGameMode(GameMode.SPECTATOR);
-        player.getWorld().playSound(
+        world.playSound(
                 player.getLocation(),
                 "minecraft:block.beacon.deactivate",
                 SoundCategory.PLAYERS,
@@ -125,6 +135,16 @@ public class GameListeners implements Listener {
                 0.5f
         );
         // todo: summon corpse
+
+        // add more time when player dies
+        var condition = manager.getGameConditions(gameUUID)
+                        .getOrCreate(
+                                "game_" + gameUUID,
+                                new TimedCondition(
+                                        TimedCondition.Type.GAME_TICK
+                                )
+                        );
+        condition.setDuration(condition.getDuration() + config.getInt("additional-time", 900));
         event.setCancelled(true);
     }
 

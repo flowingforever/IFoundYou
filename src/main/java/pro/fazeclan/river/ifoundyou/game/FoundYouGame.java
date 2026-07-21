@@ -164,10 +164,7 @@ public class FoundYouGame extends Game {
         }
 
         var graceLength = config.getInt("grace-length");
-        var gameLength = config.getInt("initial-time") + (config.getInt("time-per-runner") * runnerCount);
-        if (hunters.size() > 1) {
-            gameLength += config.getInt("time-per-hunter") * (hunterCount - 1);
-        }
+        var gameLength = config.getInt("initial-time");
         world.getPersistentDataContainer().set(
                 IFoundYou.getKey("grace_length"),
                 PersistentDataType.INTEGER,
@@ -191,12 +188,11 @@ public class FoundYouGame extends Game {
                         )
                 );
 
-        int finalGameLength = gameLength;
         timedCondition.setHud(condition -> {
             var tc = (TimedCondition) condition;
             long duration;
-            if (timedCondition.getDuration() >= finalGameLength) {
-                duration = (tc.getDuration() - finalGameLength);
+            if (timedCondition.getDuration() >= gameLength) {
+                duration = (tc.getDuration() - gameLength);
                 return "<gold><b>" + TimeUtil.ticksIntoReadableFormat((int) duration) + "</b></gold>";
             } else {
                 duration = tc.getDuration();
