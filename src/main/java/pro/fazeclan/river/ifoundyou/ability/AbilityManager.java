@@ -13,7 +13,6 @@ public class AbilityManager {
 
     public void registerAbilities() {
         register(new AdrenalineAbility());
-        register(new BlockAbility());
         register(new BrewerAbility());
         register(new ConcealAbility());
         register(new DisplacementAbility());

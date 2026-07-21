@@ -14,6 +14,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.persistence.PersistentDataType;
+import pro.fazeclan.river.ifoundyou.IFoundYou;
 import pro.fazeclan.river.ifoundyou.util.RoleUtil;
 import pro.fazeclan.river.jarona.Jarona;
 import pro.fazeclan.river.jarona.condition.TimedCondition;
@@ -144,7 +146,18 @@ public class GameListeners implements Listener {
                                         TimedCondition.Type.GAME_TICK
                                 )
                         );
-        condition.setDuration(condition.getDuration() + config.getInt("additional-time", 900));
+        var time = config.getInt("additional-time", 900);
+        condition.setDuration(condition.getDuration() + time);
+
+        world.getPersistentDataContainer().set(
+                IFoundYou.getKey("game_length"),
+                PersistentDataType.INTEGER,
+                world.getPersistentDataContainer().getOrDefault(
+                        IFoundYou.getKey("game_length"),
+                        PersistentDataType.INTEGER,
+                        900
+                ) + time
+        );
         event.setCancelled(true);
     }
 
