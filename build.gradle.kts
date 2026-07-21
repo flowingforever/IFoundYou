@@ -13,6 +13,7 @@ repositories {
         url = uri("https://repo.codemc.io/repository/maven-public")
     }
     maven { url = uri("https://maven.pvphub.me/tofaa") }
+    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {

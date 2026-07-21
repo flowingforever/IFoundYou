@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
+import pro.fazeclan.river.ifoundyou.IFoundYou;
 import pro.fazeclan.river.ifoundyou.dialog.RoleCreationDialog;
 
 public class RoleCommand {
@@ -19,6 +20,15 @@ public class RoleCommand {
                                         return Command.SINGLE_SUCCESS;
                                     }
                                     RoleCreationDialog.dialog(player);
+
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                )
+                .then(
+                        Commands.literal("reload")
+                                .executes(ctx -> {
+                                    var manager = IFoundYou.getInstance().getRoleManager();
+                                    manager.reloadRegistry();
 
                                     return Command.SINGLE_SUCCESS;
                                 })

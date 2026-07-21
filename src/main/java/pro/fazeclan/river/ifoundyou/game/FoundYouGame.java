@@ -136,7 +136,7 @@ public class FoundYouGame extends Game {
                         );
                         return current.withDisplayGroups(groups);
                     });
-                    nametagManager.setNametagSeeThrough(player, false);
+                    nametagManager.hideNametag(player);
                     NametagUtil.hidePlayerNametagWithGlowToAll(player, NamedTextColor.GREEN);
                 }
                 case HUNTERS -> {
