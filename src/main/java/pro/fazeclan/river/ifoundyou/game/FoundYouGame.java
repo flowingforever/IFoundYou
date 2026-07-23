@@ -33,9 +33,11 @@ import java.util.UUID;
 public class FoundYouGame extends Game {
     public FoundYouGame() {
         super(
+                "<red>Found You!</red>",
                 IFoundYou.getKey("found_you"),
                 true,
-                true
+                true,
+                2
         );
     }
 
